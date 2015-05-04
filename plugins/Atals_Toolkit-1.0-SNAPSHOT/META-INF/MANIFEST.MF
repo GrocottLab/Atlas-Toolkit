@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Implementation-Date: 2014-08-28T17:08:57+0100
+Implementation-Title: Atals_Toolkit
+Implementation-Version: 1.0-SNAPSHOT
+Built-By: timothygrocott
+Class-Path: ij-1.49d.jar j3d-core-1.3.1.jar vecmath-1.5.2.jar j3d-core
+ -utils-1.3.1.jar 3d_viewer-1.49d.jar org-netbeans-swing-outline-7.2.j
+ ar
+Specification-Vendor: ImageJ
+Created-By: Apache Maven 3.0.4
+Implementation-Vendor: ImageJ
+Implementation-Vendor-Id: com.grocottlab
+Build-Jdk: 1.6.0_65
+Specification-Title: Atals_Toolkit
+Implementation-Build: UNKNOWN
+Specification-Version: 1.0-SNAPSHOT
+Archiver-Version: Plexus Archiver
+

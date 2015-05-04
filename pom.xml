@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+        <licenses>
+            <license>
+                <name>GNU General Public License (GPL), Version 3.0</name>
+                <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+            </license>
+        </licenses>
+
+	<parent>
+            <groupId>sc.fiji</groupId>
+            <artifactId>pom-fiji-plugins</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
+	</parent>
+        
+        <groupId>com.grocottlab</groupId>
+	<artifactId>Atlas_Toolkit</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>Atlas_Toolkit</name>
+	<description>Atlas Toolkit plugin for ImageJ and Fiji.</description>
+        
+        <properties>
+            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        </properties>
+
+	<dependencies>
+            <dependency>
+                <groupId>net.imagej</groupId>
+                <artifactId>ij</artifactId>
+            </dependency>
+
+            <dependency>
+                <groupId>java3d</groupId>
+                <artifactId>j3d-core</artifactId>
+                <version>1.3.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>java3d</groupId>
+                <artifactId>j3d-core-utils</artifactId>
+                <version>1.5.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.imagej</groupId>
+                <artifactId>3d_viewer</artifactId>
+                <version>${imagej1.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>uk.gov.nationalarchives.thirdparty.netbeans</groupId>
+                <artifactId>org-netbeans-swing-outline</artifactId>
+                <version>7.2</version>
+            </dependency>
+            <dependency>
+                <groupId>sc.fiji</groupId>
+                <artifactId>bUnwarpJ_</artifactId>
+                <version>2.6.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>sc.fiji</groupId>
+                <artifactId>Auto_Threshold</artifactId>
+                <type>jar</type>
+            </dependency>
+	</dependencies>
+
+	<!-- NB: for project parent -->
+	<repositories>
+            <repository>
+                <id>imagej.releases</id>
+                <url>http://maven.imagej.net/content/repositories/releases</url>
+            </repository>
+            <repository>
+                <id>imagej.snapshots</id>
+                <url>http://maven.imagej.net/content/repositories/snapshots</url>
+            </repository>
+	</repositories>
+        
+        <build>
+            <finalName>${project.artifactId}_${project.version}</finalName>
+
+            <!-- Include LICENSE.txt in jar -->
+            <resources>
+                <resource>
+                    <targetPath>META-INF</targetPath>
+                    <filtering>false</filtering>
+                    <directory>${basedir}/src/main/resources</directory>
+                    <includes>
+                    <include>LICENSE.txt</include>
+                    </includes>
+                </resource>
+            </resources>
+            
+            <plugins>
+                
+                <!-- Exclude ImageJ/Fiji dependencies from jar... -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>2.3</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <artifactSet>
+                                    <excludes>
+                                        <exclude>net.imagej:*</exclude>
+                                        <exclude>java3d:*</exclude>
+                                        <exclude>sc.fiji:*</exclude>
+                                    </excludes>
+                                </artifactSet>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                
+                <!-- Make source jar... -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                
+                <!-- Make javadocs jar... -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.7</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadoc</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>javadoc</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                
+                <!-- Copy binaries jar to Fiji plugins folder... -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>copytoplugins</id>
+                            <phase>install</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <tasks>
+                                    <copy todir="/Applications/Fiji.app/plugins/" file="target/${project.build.finalName}.jar"/>
+                                </tasks>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
+</project>
